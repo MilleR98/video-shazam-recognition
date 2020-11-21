@@ -1,53 +1,10 @@
 name: video-shazam-recognition
 channels:
+  - conda-forge
   - defaults
 dependencies:
-  - ca-certificates=2020.10.14=0
-  - certifi=2020.6.20=pyhd3eb1b0_3
-  - libcxx=10.0.0=1
-  - libedit=3.1.20191231=h1de35cc_1
-  - libffi=3.3=hb1e8313_2
-  - ncurses=6.2=h0a44026_1
-  - openssl=1.1.1h=haf1e3a3_0
-  - pip=20.2.4=py38hecd8cb5_0
-  - python=3.8.5=h26836e1_1
-  - readline=8.0=h1de35cc_0
-  - setuptools=50.3.1=py38hecd8cb5_1
-  - sqlite=3.33.0=hffcf06c_0
-  - tk=8.6.10=hb0a8c7a_0
-  - wheel=0.35.1=pyhd3eb1b0_0
-  - xz=5.2.5=h1de35cc_0
-  - zlib=1.2.11=h1de35cc_3
+  - pip=20.2.4
+  - python=3.8.5
   - pip:
-    - absl-py==0.11.0
-    - astunparse==1.6.3
-    - cachetools==4.1.1
-    - chardet==3.0.4
-    - gast==0.3.3
-    - google-auth==1.23.0
-    - google-auth-oauthlib==0.4.2
-    - google-pasta==0.2.0
-    - grpcio==1.33.2
-    - h5py==2.10.0
-    - idna==2.10
-    - keras-preprocessing==1.1.2
-    - markdown==3.3.3
-    - numpy==1.18.5
-    - oauthlib==3.1.0
-    - opencv-python==4.4.0.46
-    - opt-einsum==3.3.0
-    - protobuf==3.14.0
-    - pyasn1==0.4.8
-    - pyasn1-modules==0.2.8
-    - requests==2.25.0
-    - requests-oauthlib==1.3.0
-    - rsa==4.6
-    - six==1.15.0
-    - tensorboard==2.4.0
-    - tensorboard-plugin-wit==1.7.0
-    - tensorflow==2.3.1
-    - tensorflow-estimator==2.3.0
-    - termcolor==1.1.0
-    - urllib3==1.26.2
-    - werkzeug==1.0.1
-    - wrapt==1.12.1
+      - tensorflow
+      - urllib3==1.26.2
