@@ -7,4 +7,4 @@ dependencies:
   - python=3.8.5
   - pip:
       - tensorflow
-      - urllib3==1.26.2
+      - urllib3
