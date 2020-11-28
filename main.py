@@ -1,3 +1,4 @@
+import operator
 from datetime import datetime
 
 import numpy as np
@@ -7,7 +8,7 @@ from model_provider import ModelType, ModelProvider
 from video_frames_extractor import VideoFramesExtractor
 import tensorflow as tf
 
-SIMILARITY_LOWER_BOUND = 0.70
+SIMILARITY_LOWER_BOUND = 0.75
 DATA_ROOT_FOLDER = 'data/'
 
 
@@ -24,7 +25,7 @@ def main():
 
     dt_start = datetime.now()
     input_frames = VideoFramesExtractor.extract(
-        path_to_video=DATA_ROOT_FOLDER + 'wonder_women_trailer_cut.mp4',
+        path_to_video=DATA_ROOT_FOLDER + 'wonder_cut.mov',
         img_shape=target_shape)
     print('Time elapsed for input video frames extraction: %s sec' % str((datetime.now() - dt_start).total_seconds()))
 
@@ -39,16 +40,31 @@ def main():
     print('Time elapsed for input feature extraction: %s sec' % str((datetime.now() - dt_start).total_seconds()))
 
     dt_start = datetime.now()
-    for o_index, o_feature in enumerate(original_video_features):
-        print('Original frame #{}'.format(o_index))
+
+    steps_simm = []
+    max_steps = len(original_video_features) - len(input_video_features)
+
+    for window_step in range(0, max_steps):
+        steps_simm.append([])
         for i_index, i_feature in enumerate(input_video_features):
-            simm = calculate_similarity(features1=o_feature, features2=i_feature)
-            print('Original Frame {} and Input Frame {} similarity: {:.2f}%'.format(o_index, i_index, simm))
+            simm = calculate_similarity(original_video_features[i_index + window_step], i_feature)
+            if simm < SIMILARITY_LOWER_BOUND:
+                break
+            steps_simm[window_step].append(simm)
+        window_step += 1
+
+    steps_avg_simm = [(sum(simm_values) / len(input_video_features)) for simm_values in steps_simm]
+
+    index, value = max(enumerate(steps_avg_simm), key=operator.itemgetter(1))
+
+    print(f'Max simmilarity {round(value, 2)} star from second {index}')
+
+    # print('Original Frame {} and Input Frame {} similarity: {:.2f}%'.format(o_index, i_index, simm))
     print('Time elapsed for comparing: %s sec' % str((datetime.now() - dt_start).total_seconds()))
 
 
 def testing():
-    for model_type in [ModelType.resnet_v2_152]:
+    for model_type in [ModelType.resnet_v2_50]:
         feature_extractor_model = ModelProvider.get_model(model_type)
 
         calculate_similarity_for_images(feature_extractor_model, model_type, 'lion.jpg', 'lion2.jpg')
@@ -78,6 +94,7 @@ def calculate_similarity(features1: ndarray, features2: ndarray,
                          in_percentage: bool = True):
     cosine_loss = tf.keras.losses.CosineSimilarity(axis=1)
     similarity_value = cosine_loss(y_true=tf.nn.l2_normalize(features1), y_pred=tf.nn.l2_normalize(features2)).numpy()
+    similarity_value = round(similarity_value, 4)
 
     return abs(similarity_value * 100) if in_percentage else abs(similarity_value)
 

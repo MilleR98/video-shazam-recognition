@@ -33,7 +33,6 @@ class ModelProvider:
         #    return tf.keras.models.load_model(model_path, custom_objects={'KerasLayer': KerasLayer})
 
         model = tf.keras.Sequential(layers=[
-            tf.keras.layers.InputLayer(input_shape=(base_model_type.SHAPE_SIZE, base_model_type.SHAPE_SIZE) + (3,)),
             hub.KerasLayer(base_model_type.URL, trainable=False),
             tf.keras.layers.Dropout(rate=0.2),
             tf.keras.layers.Dense(base_model_type.FEATURE_SIZE, activation='softmax')
