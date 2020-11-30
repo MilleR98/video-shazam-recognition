@@ -1,3 +1,4 @@
+from functools import lru_cache
 from pathlib import Path
 
 import tensorflow as tf
@@ -23,14 +24,22 @@ class ModelType(Enum):
         self.FEATURE_SIZE = feature_size
 
 
+BASE_MODEL_TYPE = ModelType.resnet_v2_50
+IMG_SHAPE = (BASE_MODEL_TYPE.SHAPE_SIZE, BASE_MODEL_TYPE.SHAPE_SIZE)
+
+
 class ModelProvider:
 
     @staticmethod
-    def get_model(base_model_type: ModelType, verbose: bool = True) -> tf.keras.Sequential:
+    @lru_cache
+    def get_model(base_model_type: ModelType = None, verbose: bool = True) -> tf.keras.Sequential:
 
         # model_path = "models/" + model_type.label + '.h5'
         # if Path(model_path).is_file():
         #    return tf.keras.models.load_model(model_path, custom_objects={'KerasLayer': KerasLayer})
+
+        if base_model_type is None:
+            base_model_type = BASE_MODEL_TYPE
 
         model = tf.keras.Sequential(layers=[
             hub.KerasLayer(base_model_type.URL, trainable=False),
