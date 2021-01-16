@@ -6,6 +6,8 @@ dependencies:
   - pip=20.2.4
   - python=3.8.5
   - pymongo=3.11.0
+  - opencv
   - pip:
+      - tensorflow_hub
       - tensorflow
       - urllib3

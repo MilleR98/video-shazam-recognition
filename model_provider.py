@@ -1,5 +1,4 @@
 from functools import lru_cache
-from pathlib import Path
 
 import tensorflow as tf
 import tensorflow_hub as hub
@@ -43,8 +42,6 @@ class ModelProvider:
 
         model = tf.keras.Sequential(layers=[
             hub.KerasLayer(base_model_type.URL, trainable=False),
-            tf.keras.layers.Dropout(rate=0.2),
-            tf.keras.layers.Dense(base_model_type.FEATURE_SIZE, activation='softmax')
         ], name='feature_extractor_based_on_%s' % base_model_type.LABEL)
 
         if verbose:
