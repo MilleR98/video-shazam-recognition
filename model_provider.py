@@ -1,8 +1,8 @@
-from functools import lru_cache
-
 import tensorflow as tf
 import tensorflow_hub as hub
 from enum import Enum
+
+from logger_wrapper import Log, LogLevel
 
 
 class ModelType(Enum):
@@ -26,16 +26,13 @@ class ModelType(Enum):
 BASE_MODEL_TYPE = ModelType.resnet_v2_50
 IMG_SHAPE = (BASE_MODEL_TYPE.SHAPE_SIZE, BASE_MODEL_TYPE.SHAPE_SIZE)
 
+_log = Log(level=LogLevel.DEBUG)
+
 
 class ModelProvider:
 
     @staticmethod
-    @lru_cache
     def get_model(base_model_type: ModelType = None, verbose: bool = True) -> tf.keras.Sequential:
-
-        # model_path = "models/" + model_type.label + '.h5'
-        # if Path(model_path).is_file():
-        #    return tf.keras.models.load_model(model_path, custom_objects={'KerasLayer': KerasLayer})
 
         if base_model_type is None:
             base_model_type = BASE_MODEL_TYPE
@@ -44,13 +41,11 @@ class ModelProvider:
             hub.KerasLayer(base_model_type.URL, trainable=False),
         ], name='feature_extractor_based_on_%s' % base_model_type.LABEL)
 
-        if verbose:
-            print("Building the model")
+        _log.info("Building the model")
         model.build([None, base_model_type.SHAPE_SIZE, base_model_type.SHAPE_SIZE, 3])
 
         if verbose:
+            _log.debug("Model summary:")
             model.summary()
-
-        # model.save(model_path)
 
         return model

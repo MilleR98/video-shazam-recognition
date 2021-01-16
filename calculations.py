@@ -3,8 +3,6 @@ from typing import Tuple, List
 import tensorflow as tf
 import numpy as np
 
-from image_utils import ImageUtils
-
 SIMILARITY_LOWER_BOUND = 0.75
 
 
@@ -16,18 +14,8 @@ def calculate_similarity(features1: np.ndarray, features2: np.ndarray, in_percen
     return round(abs(similarity_value * 100) if in_percentage else abs(similarity_value), 4)
 
 
-def show_similarity_for_images(feature_extractor_model, model_type, img1_path, img2_path) -> None:
-    image_array1 = ImageUtils.load_and_preprocess_image(img1_path, model_type.SHAPE_SIZE)
-    features1 = feature_extractor_model.predict(np.array([image_array1]))
-    image_array2 = ImageUtils.load_and_preprocess_image(img2_path, model_type.SHAPE_SIZE)
-    features2 = feature_extractor_model.predict(np.array([image_array2]))
-    simm_value = calculate_similarity(features1, features2)
-
-    if abs(simm_value) >= SIMILARITY_LOWER_BOUND:
-        print('{} and {} similarity: {:.4f}%'.format(img1_path, img2_path, simm_value))
-
-
-def find_similarity_between(original_video_features: List[np.ndarray], input_video_features: List[np.ndarray]) -> Tuple[int, float]:
+def find_similarity_between(original_video_features: List[np.ndarray], input_video_features: List[np.ndarray]) \
+        -> Tuple[int, float]:
     steps_simm = []
     max_steps = len(original_video_features) - len(input_video_features)
 

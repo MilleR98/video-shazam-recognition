@@ -5,6 +5,8 @@ from typing import List
 from bson import Binary
 from pymongo import MongoClient
 
+from logger_wrapper import Log, LogLevel
+
 
 def npArray2Binary(npArray):
     """Utility method to turn an numpy array into a BSON Binary string.
@@ -47,11 +49,14 @@ class VideoFeaturesDb:
     _COLLECTION_NAME: str = 'VideoFeatures'
     _DB_NAME: str = 'VideosDB'
 
-    def __init__(self) -> None:
+    def __init__(self, verbose: bool = False) -> None:
         mongo_client = MongoClient(host='localhost', port=27017, document_class=dict)
         self._db = mongo_client[self._DB_NAME]
+        self._log = Log(level=LogLevel.DEBUG if verbose else None)
 
     def get_all_video_features(self) -> List[VideoFeatures]:
+        self._log.debug('Fetching all persisted video info...')
+
         fetch_result = self._db[self._COLLECTION_NAME].find()
 
         return [
@@ -65,6 +70,8 @@ class VideoFeaturesDb:
         ]
 
     def get_video_features_by_name(self, search_name: str) -> VideoFeatures:
+        self._log.debug(f'Searching persisted video info with name {search_name}')
+
         persistent_video = self._db[self._COLLECTION_NAME].find_one(filter={'name': search_name})
 
         return VideoFeatures(
@@ -75,12 +82,16 @@ class VideoFeaturesDb:
         )
 
     def save_processed_video(self, video_features: VideoFeatures):
+        self._log.debug(f'Saving processed video info: {video_features}')
+
         dict_values = video_features.__dict__
         del dict_values['_id']
         dict_values['feature_vectors'] = npArray2Binary(dict_values['feature_vectors'])
         self._db[self._COLLECTION_NAME].insert_one(video_features.__dict__)
 
     def update_processed_video(self, video_features: VideoFeatures):
+        self._log.debug(f'Updating processed video info: {video_features}')
+
         dict_values = video_features.__dict__
         dict_values['feature_vectors'] = npArray2Binary(dict_values['feature_vectors'])
         self._db[self._COLLECTION_NAME].update_one(video_features.__dict__)
