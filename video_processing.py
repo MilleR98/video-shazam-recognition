@@ -37,7 +37,7 @@ class VideoProcessing:
         self._log.debug('Time elapsed for original video frames extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
-        feature_extractor_model = ModelProvider.get_model()
+        feature_extractor_model = ModelProvider.instance()
 
         dt_start = datetime.now()
         original_video_features = [feature_extractor_model.predict(np.array([f])) for f in video_frames]
@@ -59,7 +59,7 @@ class VideoProcessing:
         self._log.debug('Time elapsed for input video frames extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
-        feature_extractor_model = ModelProvider.get_model()
+        feature_extractor_model = ModelProvider.instance()
 
         dt_start = datetime.now()
         input_video_features = [feature_extractor_model.predict(np.array([f])) for f in input_frames]

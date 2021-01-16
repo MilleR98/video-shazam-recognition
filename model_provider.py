@@ -30,9 +30,17 @@ _log = Log(level=LogLevel.DEBUG)
 
 
 class ModelProvider:
+    FEATURE_EXTRACTING_MODEL = None
 
-    @staticmethod
-    def get_model(base_model_type: ModelType = None, verbose: bool = True) -> tf.keras.Sequential:
+    @classmethod
+    def instance(cls):
+        if cls.FEATURE_EXTRACTING_MODEL is None:
+            cls.FEATURE_EXTRACTING_MODEL = cls.build_model()
+
+        return cls.FEATURE_EXTRACTING_MODEL
+
+    @classmethod
+    def build_model(cls, base_model_type: ModelType = None, verbose: bool = True) -> tf.keras.Sequential:
 
         if base_model_type is None:
             base_model_type = BASE_MODEL_TYPE
