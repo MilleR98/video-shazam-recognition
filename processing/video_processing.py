@@ -5,10 +5,10 @@ from typing import Tuple, List
 import cv2
 import numpy as np
 
-from calculations import find_similarity_between
 from logger_wrapper import Log, LogLevel
-from model_provider import ModelProvider, IMG_SHAPE
-from video_features_db import VideoFeaturesDb, VideoFeatures
+from preprocessing.model_provider import ModelProvider, IMG_SHAPE
+from processing.calculations import find_similarity_between
+from processing.video_features_db import VideoFeaturesDb, VideoFeatures
 
 SUPPORTED_VIDEO_TYPES = ('.mov', 'mp4')
 

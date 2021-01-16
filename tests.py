@@ -1,4 +1,4 @@
-from video_processing import VideoProcessing
+from processing.video_processing import VideoProcessing
 
 
 def save_video():
