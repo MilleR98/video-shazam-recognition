@@ -9,6 +9,7 @@ dependencies:
   - pyyaml
   - opencv
   - flask
+  - flask-socketio
   - pip:
       - tensorflow_hub
       - tensorflow
