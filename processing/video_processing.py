@@ -54,6 +54,8 @@ class VideoProcessing:
 
         self._log.info(f'Input video {os.path.basename(path_to_fragment)}')
 
+        query_dt_start = datetime.now()
+
         dt_start = datetime.now()
         input_frames = VideoProcessing.extract_frames(path_to_video=path_to_fragment, img_shape=IMG_SHAPE)
         self._log.debug('Time elapsed for input video frames extraction: %s sec'
@@ -77,6 +79,13 @@ class VideoProcessing:
             self._log.info(f'Max simmilarity {round(value, 2)} star from second {index}')
 
         self._log.debug('Time elapsed for comparing: %s sec' % str((datetime.now() - dt_start).total_seconds()))
+
+        query_dt_end = datetime.now()
+
+        return {
+            'name': db_video_infos[0].name,
+            'elapsedTime': (datetime.now() - dt_start).total_seconds()
+        }
 
     @staticmethod
     def __get_frame(video_cap: cv2.VideoCapture, sec: int, img_shape: Tuple[int, int]):

@@ -1,8 +1,12 @@
-from flask import Flask, render_template
+import datetime
+import os
+
+from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 
-from cfg.globals import LOG_CONF_FILE, BASE_DIR
+from cfg.globals import LOG_CONF_FILE, BASE_DIR, DATA_DIR
 from logger_wrapper import Log
+from processing.video_processing import VideoProcessing
 
 Log.configure(path_to_config=LOG_CONF_FILE, root_dir_path=BASE_DIR)
 
@@ -12,8 +16,23 @@ socketio = SocketIO(app, async_mode=None)
 
 
 @app.route('/ping')
-def hello_world():
+def ping():
     return 'Pong:)'
+
+
+@app.route('/api/recognize', methods=['POST'])
+def search_video():
+    print(request)
+    input_video = request.files['input_file']
+    unique_timestamp = str(datetime.datetime.now().timestamp()) + '_'
+    path_to_input = DATA_DIR / 'temp' / (unique_timestamp + input_video.filename)
+    input_video.save(path_to_input)
+    try:
+        result = VideoProcessing().query_video(path_to_fragment=str(path_to_input))
+    finally:
+        os.remove(path_to_input)
+
+    return jsonify(result)
 
 
 @app.route('/', methods=['GET'])
@@ -37,4 +56,4 @@ def handle_my_custom_event(json):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app)
