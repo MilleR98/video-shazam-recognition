@@ -1,4 +1,4 @@
-name: video-shazam-recognition
+name: vidiscovery-recognition
 channels:
   - conda-forge
   - defaults
