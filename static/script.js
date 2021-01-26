@@ -50,8 +50,19 @@ function searchVideo() {
 
             $('#search-btn')[0].style.display = 'inline-block'
             $('#search-btn-loading')[0].style.display = 'none'
-            $('.alert')[0].hidden = false
-            $('.alert p')[0].innerText = `This fragment belongs to: ${respJsonData.name} . Elapsed time in seconds: ${Math.ceil(respJsonData.elapsedTime)}`
+            const alert = $('.alert')[0]
+            alert.hidden = false
+            if (respJsonData.isFound) {
+                alert.classList.add('alert-success')
+                alert.classList.remove('alert-warning')
+                alert.querySelector('h4').innerText = 'We found it!'
+                alert.querySelector('p').innerText = `This fragment belongs to: ${respJsonData.name} . Elapsed time: ${Math.ceil(respJsonData.elapsedTime)} sec`
+            } else {
+                alert.classList.remove('alert-success')
+                alert.classList.add('alert-warning')
+                alert.querySelector('h4').innerText = 'Ooops...'
+                alert.querySelector('p').innerText = `Sorry, we could not identify original video for given fragment...Elapsed time in seconds: ${Math.ceil(respJsonData.elapsedTime)}`
+            }
         })
         .catch((error) => {
             console.log(error);

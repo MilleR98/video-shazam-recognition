@@ -44,7 +44,7 @@ class VideoProcessing:
         video_features_info = VideoFeatures(name=str(os.path.basename(path_to_video)),
                                             feature_vectors=original_video_features,
                                             original_video_url=os.path.dirname(path_to_video))
-        self._log.debug('Time elapsed for input feature extraction: %s sec'
+        self._log.debug('Time elapsed for original feature extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
         self._video_db.save_processed_video(video_features_info)
@@ -69,13 +69,15 @@ class VideoProcessing:
 
         db_video_infos: List[VideoFeatures] = self._video_db.get_all_video_features()
 
-        current_max = 0.
+        current_max = 70.
+        original_video_name = None
         for vid_info in db_video_infos:
             self._log.info(f'Checking video {vid_info.name}')
             original_video_features = vid_info.feature_vectors
             index, value = find_similarity_between(original_video_features, input_video_features)
-            if current_max > value:
+            if value > current_max:
                 current_max = value
+                original_video_name = vid_info.name
             self._log.info(f'Max simmilarity {round(value, 2)} star from second {index}')
 
         self._log.debug('Time elapsed for comparing: %s sec' % str((datetime.now() - dt_start).total_seconds()))
@@ -83,8 +85,9 @@ class VideoProcessing:
         query_dt_end = datetime.now()
 
         return {
-            'name': db_video_infos[0].name,
-            'elapsedTime': (datetime.now() - dt_start).total_seconds()
+            'isFound': original_video_name is not None,
+            'name': original_video_name,
+            'elapsedTime': (query_dt_end - query_dt_start).total_seconds()
         }
 
     @staticmethod
