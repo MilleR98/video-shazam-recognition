@@ -1,7 +1,7 @@
 import datetime
 import os
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 from flask_socketio import SocketIO, emit
 
 from cfg.globals import LOG_CONF_FILE, BASE_DIR, DATA_DIR
@@ -22,7 +22,6 @@ def ping():
 
 @app.route('/api/recognize', methods=['POST'])
 def search_video():
-    print(request)
     input_video = request.files['input_file']
     unique_timestamp = str(datetime.datetime.now().timestamp()) + '_'
     path_to_input = DATA_DIR / 'temp' / (unique_timestamp + input_video.filename)
@@ -36,17 +35,26 @@ def search_video():
 
 
 @app.route('/', methods=['GET'])
-def upload_file():
+def home_page():
     return render_template('index.html', sync_mode=socketio.async_mode)
 
 
+@app.route('/video', methods=['GET'])
+def stream_local_video():
+    video_full_url = request.args.get('path')
+
+    return Response(
+        response=open(video_full_url, "rb").read(),
+        mimetype="video/mp4")
+
+
 @socketio.on('connect')
-def test_connect():
+def socket_connect():
     emit('my_response', 'Client connected')
 
 
 @socketio.on('disconnect')
-def test_disconnect():
+def socket_disconnect():
     print('Client disconnected')
 
 

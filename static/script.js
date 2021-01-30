@@ -44,6 +44,7 @@ function searchVideo() {
     $('#search-btn')[0].style.display = 'none'
     $('#search-btn-loading')[0].style.display = 'inline-block'
     $('.full-loader-container')[0].style.display = 'block'
+    $('#original-video').remove();
 
     fetch(serverOrigin + '/api/recognize', {method: 'POST', body: formData})
         .then(resp => resp.json())
@@ -59,12 +60,25 @@ function searchVideo() {
                 alert.classList.remove('alert-warning')
                 alert.querySelector('h4').innerText = 'We found it!'
                 alert.querySelector('p').innerText = `This fragment belongs to: ${respJsonData.name} . Elapsed time: ${Math.ceil(respJsonData.elapsedTime)} sec`
+
+                const video = $('<video />', {
+                    id: 'original-video',
+                    src: serverOrigin + '/video?path=' + respJsonData.video_full_url,
+                    type: 'video/mp4',
+                    controls: true,
+                    style: 'margin: 0 auto; width: 600px'
+                });
+                video.appendTo($('#result-container'));
+
             } else {
                 alert.classList.remove('alert-success')
                 alert.classList.add('alert-warning')
                 alert.querySelector('h4').innerText = 'Ooops...'
                 alert.querySelector('p').innerText = `Sorry, we could not identify original video for given fragment...Elapsed time in seconds: ${Math.ceil(respJsonData.elapsedTime)}`
             }
+
+            $('#result-modal')[0].style.display = 'block'
+
         })
         .catch((error) => {
             console.log(error);
@@ -84,4 +98,9 @@ function addNotification(message) {
 
     $('.toast-container')[0].innerHTML += newToast;
     $('.toast').toast('show');
+}
+
+function closeResultModal() {
+    $('#result-modal')[0].style.display = 'none'
+    $('#original-video').remove();
 }

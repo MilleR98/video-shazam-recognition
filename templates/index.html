@@ -22,7 +22,7 @@
     <div class="toast-container position-absolute top-0 end-0 p-3">
     </div>
 </div>
-<div style="display: flex; flex-direction: column; margin: 0 auto">
+<div style="display: flex; flex-direction: column; margin: 0 auto" id="main-container">
     <div>
         <img width="400" src="/static/logo_transparent.png" alt="Logo">
     </div>
@@ -36,21 +36,32 @@
             </button>
         </div>
     </div>
-    <div>
-        <div class="alert alert-success" role="alert" hidden>
-            <h4 class="alert-heading"></h4>
-            <p></p>
-        </div>
-    </div>
 </div>
 
 <div class="container full-loader-container">
-        <div class="row">
-            <div class="col-md-12" style="margin-top: 300px">
-                <div class="loader16"></div>
-            </div>
-            <span class="loader-label">Identifying given fragment...</span>
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 300px">
+            <div class="loader16"></div>
         </div>
+        <span class="loader-label">Identifying given fragment...</span>
     </div>
+</div>
+
+<div id="result-modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div id="result-container">
+            <div class="alert alert-success" role="alert" hidden>
+                <h4 class="alert-heading"></h4>
+                <p></p>
+            </div>
+        </div>
+        <button class="btn btn-md btn-primary" id="close-modal-btn" style="width: 150px;margin: 10px auto;" onclick="closeResultModal()">
+            Close
+        </button>
+    </div>
+</div>
 </body>
+
 </html>

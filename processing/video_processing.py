@@ -71,6 +71,7 @@ class VideoProcessing:
 
         current_max = SIMILARITY_LOWER_BOUND
         original_video_name = None
+        original_video_url = None
         for vid_info in db_video_infos:
             self._log.info(f'Checking video {vid_info.name}')
             original_video_features = vid_info.feature_vectors
@@ -78,7 +79,8 @@ class VideoProcessing:
             if value > current_max:
                 current_max = value
                 original_video_name = vid_info.name
-            self._log.info(f'Max simmilarity {round(value, 2)} star from second {index}')
+                original_video_url = vid_info.original_video_url
+            self._log.info(f'Max similarity {round(value, 2)} star from second {index}')
 
         self._log.debug('Time elapsed for comparing: %s sec' % str((datetime.now() - dt_start).total_seconds()))
 
@@ -87,7 +89,8 @@ class VideoProcessing:
         return {
             'isFound': original_video_name is not None,
             'name': original_video_name,
-            'elapsedTime': (query_dt_end - query_dt_start).total_seconds()
+            'elapsedTime': (query_dt_end - query_dt_start).total_seconds(),
+            'video_full_url': original_video_url
         }
 
     @staticmethod
