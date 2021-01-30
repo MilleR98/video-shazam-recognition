@@ -7,7 +7,7 @@ import numpy as np
 
 from logger_wrapper import Log, LogLevel
 from preprocessing.model_provider import ModelProvider, IMG_SHAPE
-from processing.calculations import find_similarity_between
+from processing.calculations import find_similarity_between, SIMILARITY_LOWER_BOUND
 from processing.video_features_db import VideoFeaturesDb, VideoFeatures
 
 SUPPORTED_VIDEO_TYPES = ('.mov', 'mp4')
@@ -69,7 +69,7 @@ class VideoProcessing:
 
         db_video_infos: List[VideoFeatures] = self._video_db.get_all_video_features()
 
-        current_max = 70.
+        current_max = SIMILARITY_LOWER_BOUND
         original_video_name = None
         for vid_info in db_video_infos:
             self._log.info(f'Checking video {vid_info.name}')

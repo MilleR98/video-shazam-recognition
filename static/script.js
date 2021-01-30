@@ -43,6 +43,7 @@ function searchVideo() {
     $('.alert')[0].hidden = true
     $('#search-btn')[0].style.display = 'none'
     $('#search-btn-loading')[0].style.display = 'inline-block'
+    $('.full-loader-container')[0].style.display = 'block'
 
     fetch(serverOrigin + '/api/recognize', {method: 'POST', body: formData})
         .then(resp => resp.json())
@@ -50,6 +51,7 @@ function searchVideo() {
 
             $('#search-btn')[0].style.display = 'inline-block'
             $('#search-btn-loading')[0].style.display = 'none'
+            $('.full-loader-container')[0].style.display = 'none'
             const alert = $('.alert')[0]
             alert.hidden = false
             if (respJsonData.isFound) {
@@ -66,6 +68,9 @@ function searchVideo() {
         })
         .catch((error) => {
             console.log(error);
+            $('#search-btn')[0].style.display = 'inline-block'
+            $('#search-btn-loading')[0].style.display = 'none'
+            $('.full-loader-container')[0].style.display = 'none'
         })
 }
 
