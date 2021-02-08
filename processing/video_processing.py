@@ -22,8 +22,11 @@ def validate_path(path_to_video):
 
 class VideoProcessing:
 
-    def __init__(self, verbose: bool = False) -> None:
-        self._video_db = VideoFeaturesDb()
+    def __init__(self, verbose: bool = False, video_db=None) -> None:
+        if video_db is None:
+            self._video_db = VideoFeaturesDb()
+        else:
+            self._video_db = video_db
         self._log = Log(level=LogLevel.DEBUG if verbose else None)
 
     def analyse_and_save(self, path_to_video: str):
@@ -33,7 +36,7 @@ class VideoProcessing:
         self._log.info(f'Original Video to process {os.path.basename(path_to_video)}')
 
         dt_start = datetime.now()
-        video_frames = self.extract_frames(path_to_video=path_to_video, img_shape=IMG_SHAPE)
+        video_frames, duration = self.extract_frames(path_to_video=path_to_video, img_shape=IMG_SHAPE)
         self._log.debug('Time elapsed for original video frames extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
@@ -41,9 +44,10 @@ class VideoProcessing:
 
         dt_start = datetime.now()
         original_video_features = [feature_extractor_model.predict(np.array([f])) for f in video_frames]
-        video_features_info = VideoFeatures(name=str(os.path.basename(path_to_video)),
+        video_features_info = VideoFeatures(name=os.path.splitext(str(os.path.basename(path_to_video)))[0],
                                             feature_vectors=original_video_features,
-                                            original_video_url=os.path.dirname(path_to_video))
+                                            original_video_url=path_to_video,
+                                            duration=duration)
         self._log.debug('Time elapsed for original feature extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
@@ -57,7 +61,7 @@ class VideoProcessing:
         query_dt_start = datetime.now()
 
         dt_start = datetime.now()
-        input_frames = VideoProcessing.extract_frames(path_to_video=path_to_fragment, img_shape=IMG_SHAPE)
+        input_frames, duration = VideoProcessing.extract_frames(path_to_video=path_to_fragment, img_shape=IMG_SHAPE)
         self._log.debug('Time elapsed for input video frames extraction: %s sec'
                         % str((datetime.now() - dt_start).total_seconds()))
 
@@ -121,7 +125,11 @@ class VideoProcessing:
                     frame_img /= 255.0
                 frames.append(frame_img)
 
+        fps = video_cap.get(cv2.CAP_PROP_FPS)
+        frame_count = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        duration = round(frame_count / fps)
+
         video_cap.release()
         cv2.destroyAllWindows()
 
-        return frames
+        return frames, duration

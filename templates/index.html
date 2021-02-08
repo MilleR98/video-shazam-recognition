@@ -22,7 +22,7 @@
     <div class="toast-container position-absolute top-0 end-0 p-3">
     </div>
 </div>
-<div style="display: flex; flex-direction: column; margin: 0 auto" id="main-container">
+<div id="main-container" style="padding: 30px">
     <div>
         <img width="400" src="/static/logo_transparent.png" alt="Logo">
     </div>
@@ -34,6 +34,7 @@
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Processing...
             </button>
+            <button type="button" class="btn btn-link" onclick="openNav()">Show history</button>
         </div>
     </div>
 </div>
@@ -47,6 +48,47 @@
     </div>
 </div>
 
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <div>
+        <h3>Search results history</h3>
+        <hr>
+        <ul class="list-group" id="history-list" style="padding: 15px;">
+            <a onclick="playVideo('/Users/omelnyk/Work/vidiscovery-recognition/data/Creed - Official Trailer 2.mp4')"
+               class="list-group-item" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <small class="text-muted">Today</small>
+                </div>
+                <p class="mb-1">Creed - Official Trailer 2</p>
+                <p class="mb-1 text-muted">Elapsed-time: 20sec</p>
+            </a>
+            <a onclick="playVideo('/Users/omelnyk/Work/vidiscovery-recognition/data/Wonder Woman 1984 - Official Main Trailer.mp4')"
+               class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <small class="text-muted">2 days ago</small>
+                </div>
+                <p class="mb-1">Wonder Woman 1984 - Official Main Trailer</p>
+                <p class="mb-1 text-muted">Elapsed-time: 25sec</p>
+            </a>
+            <a onclick="playVideo('/Users/omelnyk/Work/vidiscovery-recognition/data/LVIV POLYTECHNIС IN NUMBERS.mp4')"
+               class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <small class="text-muted">3 days ago</small>
+                </div>
+                <p class="mb-1">LVIV POLYTECHNIС IN NUMBERS.</p>
+                <p class="mb-1 text-muted">Elapsed-time: 35sec</p>
+            </a>
+            <a onclick="playVideo('/Users/omelnyk/Work/vidiscovery-recognition/data/Безславні кріпаки. Офіційний трейлер.mp4')"
+               class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <small class="text-muted">5 days ago</small>
+                </div>
+                <p class="mb-1">Безславні кріпаки. Офіційний трейлер</p>
+                <p class="mb-1 text-muted">Elapsed-time: 35sec</p>
+            </a>
+        </ul>
+    </div>
+</div>
 <div id="result-modal" class="modal">
 
     <!-- Modal content -->
@@ -62,6 +104,20 @@
         </button>
     </div>
 </div>
+
+<div id="video-modal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div id="video-play-container">
+
+        </div>
+        <button class="btn btn-md btn-primary" id="close-modal-btn" style="width: 150px;margin: 10px auto;" onclick="closeModal()">
+            Close
+        </button>
+    </div>
+</div>
+
 </body>
 
 </html>

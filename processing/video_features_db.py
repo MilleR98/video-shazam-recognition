@@ -42,6 +42,7 @@ class VideoFeatures(dict):
     name: str
     feature_vectors: list
     original_video_url: str
+    duration: int
     _id: str = None
 
 
@@ -64,10 +65,28 @@ class VideoFeaturesDb:
                 name=persistent_video['name'],
                 feature_vectors=binary2npArray(persistent_video['feature_vectors']),
                 original_video_url=persistent_video['original_video_url'],
+                duration=persistent_video['duration'],
                 _id=persistent_video['_id']
             )
             for persistent_video in fetch_result
         ]
+
+    def get_all_processed_videos_info(self) -> List[dict]:
+        self._log.debug('Fetching all persisted video info...')
+
+        fetch_result = self._db[self._COLLECTION_NAME].aggregate(pipeline=[
+            {
+                '$project': {
+                    'feature_vectors_count': {'$size': '$feature_vectors'},
+                    'name': 1,
+                    'duration': 1,
+                    '_id': 0,
+                    'original_video_url': 1
+                }
+            }
+        ])
+
+        return list(fetch_result)
 
     def get_video_features_by_name(self, search_name: str) -> VideoFeatures:
         self._log.debug(f'Searching persisted video info with name {search_name}')
@@ -78,6 +97,7 @@ class VideoFeaturesDb:
             name=persistent_video['name'],
             feature_vectors=binary2npArray(persistent_video['feature_vectors']),
             original_video_url=persistent_video['original_video_url'],
+            duration=persistent_video['duration'],
             _id=persistent_video['_id']
         )
 

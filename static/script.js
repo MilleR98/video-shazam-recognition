@@ -30,6 +30,8 @@ function fileSelected(filesInput) {
 }
 
 function searchVideo() {
+    document.getElementById("mySidebar").style.width = "0";
+
     const files = document.getElementById('video-file').files;
 
     if (files.length === 0) {
@@ -102,5 +104,37 @@ function addNotification(message) {
 
 function closeResultModal() {
     $('#result-modal')[0].style.display = 'none'
+    $('#original-video').remove();
+}
+
+function openNav() {
+    const sidebar = document.getElementById("mySidebar");
+    if (sidebar.style.width !== '0px') {
+        sidebar.style.width = "0";
+
+    } else {
+        sidebar.style.width = "350px";
+    }
+}
+
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+}
+
+function playVideo(original_video_url) {
+    const video = $('<video />', {
+        id: 'original-video',
+        src: '/video?path=' + original_video_url,
+        type: 'video/mp4',
+        controls: true,
+        style: 'margin: 0 auto; width: 600px'
+    });
+    video.appendTo($('#video-play-container'));
+
+    $('#video-modal')[0].style.display = 'block'
+}
+
+function closeModal() {
+    $('#video-modal')[0].style.display = 'none'
     $('#original-video').remove();
 }

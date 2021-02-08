@@ -1,4 +1,5 @@
 from cfg.globals import DATA_DIR
+from processing.video_features_db import VideoFeaturesDb
 from processing.video_processing import VideoProcessing
 
 
@@ -17,4 +18,4 @@ def test_query():
 
 
 if __name__ == "__main__":
-    test_query()
+    save_video()
