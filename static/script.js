@@ -68,6 +68,7 @@ function searchVideo() {
                     src: serverOrigin + '/video?path=' + respJsonData.video_full_url,
                     type: 'video/mp4',
                     controls: true,
+                    autoplay: true,
                     style: 'margin: 0 auto; width: 600px'
                 });
                 video.appendTo($('#result-container'));
@@ -109,12 +110,12 @@ function closeResultModal() {
 
 function openNav() {
     const sidebar = document.getElementById("mySidebar");
-    if (sidebar.style.width !== '0px') {
-        sidebar.style.width = "0";
 
-    } else {
-        sidebar.style.width = "350px";
+    if (sidebar.style.width === '350px'){
+        sidebar.style.width = '0';
+        return;
     }
+    sidebar.style.width = "350px";
 }
 
 function closeNav() {
@@ -127,6 +128,7 @@ function playVideo(original_video_url) {
         src: '/video?path=' + original_video_url,
         type: 'video/mp4',
         controls: true,
+        autoplay: true,
         style: 'margin: 0 auto; width: 600px'
     });
     video.appendTo($('#video-play-container'));
