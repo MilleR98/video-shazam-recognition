@@ -42,7 +42,7 @@ def search_video():
     return jsonify(result)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def home_page():
     return render_template('index.html', sync_mode=socketio.async_mode)
 

@@ -10,6 +10,7 @@ body {
     align-items: center;
     padding-top: 40px;
     padding-bottom: 40px;
+    background: #e0f5f926;
 }
 
 .form-signin {
@@ -177,7 +178,8 @@ body {
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    margin: 0 auto
+    margin: 0 auto;
+    background: white;
 }
 
 .table-wrapper {
