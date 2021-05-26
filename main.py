@@ -16,6 +16,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, async_mode=None)
 
 video_db = VideoFeaturesDb()
+engine = VideoProcessing(verbose=True, video_db=video_db)
 
 
 @app.route('/ping')
@@ -35,7 +36,7 @@ def search_video():
     path_to_input = DATA_DIR / 'temp' / (unique_timestamp + input_video.filename)
     input_video.save(path_to_input)
     try:
-        result = VideoProcessing(verbose=True, video_db=video_db).query_video(path_to_fragment=str(path_to_input))
+        result = engine.query_video_v2(path_to_fragment=str(path_to_input))
     finally:
         os.remove(path_to_input)
 
